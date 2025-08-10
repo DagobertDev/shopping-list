@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import './App.css'
+import ListItem from './ListItem'
 
 function App() {
 
   const [listItems, setListItems] = useState(["Milk", "Oats", "Onions"])
 
-  const list = listItems.map(item => <li>{item}</li>)
+  const list = listItems.map(item => <ListItem name={item}/>)
 
   const [newItem, setNewItem] = useState("")
 
