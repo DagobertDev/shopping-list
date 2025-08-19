@@ -6,14 +6,18 @@ function App() {
 
   const [listItems, setListItems] = useState(["Milk", "Oats", "Onions"])
 
-  const list = listItems.map(item => <ListItem name={item}/>)
-
-  const [newItem, setNewItem] = useState("")
-
   const addItem = () => {
       setListItems([...listItems, newItem]);
       setNewItem("");
   }
+
+  const removeItem = (removedItem: string) => {
+      setListItems((items => items.filter(item => item !== removedItem)));
+  }
+
+  const list = listItems.map(item => <ListItem name={item} deleteItem={() => removeItem(item)}/>)
+
+  const [newItem, setNewItem] = useState("")
 
   return (
     <>

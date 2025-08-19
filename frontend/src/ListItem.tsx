@@ -1,6 +1,9 @@
-function ListItem({name}){
+function ListItem({name, deleteItem}){
     return (
-        <li>{name}</li>
+        <li>
+            {name}
+            <button onClick={deleteItem}>Remove</button>
+        </li>
     )
 }
 
