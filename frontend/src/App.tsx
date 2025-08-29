@@ -9,20 +9,32 @@ function App() {
   const [listItems, setListItems] = useState<string[]>([])  
   const [newItem, setNewItem] = useState("")
 
-  useEffect(() => {
+  const loadItems = () => {
     fetch(itemsURL)
       .then(result => result.json())
       .then(items => setListItems(items.map(item => item.name)))
       .catch(error => console.error("Failed to fetch items", error))
-  }, [])
+  }
+
+  useEffect(loadItems, [])
 
   const addItem = () => {
-      setListItems([...listItems, newItem]);
-      setNewItem("");
+    fetch(itemsURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newItem),
+    })
+      .then(() => {
+        loadItems()
+        setNewItem("")
+      })
+      .catch(error => console.error("Failed to add item", error))
   }
 
   const removeItem = (removedItem: string) => {
-      setListItems((items => items.filter(item => item !== removedItem)));
+    setListItems((items => items.filter(item => item !== removedItem)));
   }
 
   const list = listItems.map(item => <ListItem name={item} deleteItem={() => removeItem(item)}/>)
