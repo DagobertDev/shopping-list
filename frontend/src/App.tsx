@@ -1,10 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import ListItem from './ListItem'
 
 function App() {
 
-  const [listItems, setListItems] = useState(["Milk", "Oats", "Onions"])
+  const itemsURL = "http://localhost:5157/shoppingitem"
+
+  const [listItems, setListItems] = useState<string[]>([])  
+  const [newItem, setNewItem] = useState("")
+
+  useEffect(() => {
+    fetch(itemsURL)
+      .then(result => result.json())
+      .then(items => setListItems(items.map(item => item.name)))
+      .catch(error => console.error("Failed to fetch items", error))
+  }, [])
 
   const addItem = () => {
       setListItems([...listItems, newItem]);
@@ -16,8 +26,6 @@ function App() {
   }
 
   const list = listItems.map(item => <ListItem name={item} deleteItem={() => removeItem(item)}/>)
-
-  const [newItem, setNewItem] = useState("")
 
   return (
     <>
