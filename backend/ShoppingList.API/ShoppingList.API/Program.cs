@@ -12,6 +12,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    app.UseCors(x => x.AllowAnyMethod()
+                      .AllowAnyOrigin());
 }
 
 app.UseAuthorization();
