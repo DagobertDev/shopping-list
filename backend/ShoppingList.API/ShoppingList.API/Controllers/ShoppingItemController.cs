@@ -6,10 +6,10 @@ namespace ShoppingList.API.Controllers
     [Route("[controller]")]
     public class ShoppingItemController : ControllerBase
     {
-        private static readonly string[] Items = new[]
-        {
+        private static readonly List<string> Items = 
+        [
             "Milk", "Oats", "Onions"
-        };
+        ];
 
         private readonly ILogger<ShoppingItemController> _logger;
 
@@ -26,6 +26,12 @@ namespace ShoppingList.API.Controllers
                 Name = item
             })
             .ToArray();
+        }
+
+        [HttpPost(Name = "AddItem")]
+        public void Add([FromBody] string name)
+        {
+            Items.Add(name);
         }
     }
 }

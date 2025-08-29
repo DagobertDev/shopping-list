@@ -1,6 +1,11 @@
 @ShoppingList.API_HostAddress = http://localhost:5157
 
+### Get all shopping items
 GET {{ShoppingList.API_HostAddress}}/shoppingitem/
 Accept: application/json
 
-###
+### Add a new shopping item
+POST {{ShoppingList.API_HostAddress}}/shoppingitem/
+Content-Type: application/json
+Accept: application/json
+"Milk"
