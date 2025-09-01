@@ -45,10 +45,10 @@ namespace ShoppingList.API.Controllers
             Items.Add(item);
         }
 
-        [HttpDelete(Name = "RemoveItem")]
-        public void Remove([FromBody] ShoppingItem removedItem)
+        [HttpDelete("{id:guid}", Name = "RemoveItem")]
+        public void Remove(Guid id)
         {
-            Items.RemoveAll(item => item.Name == removedItem.Name);
+            Items.RemoveAll(item => item.Id == id);
         }
     }
 }

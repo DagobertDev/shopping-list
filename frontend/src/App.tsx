@@ -30,16 +30,12 @@ function App() {
       .then(() => {
         loadItems()
       })
-      .catch(error => console.error("Failed to remove item", error))
+      .catch(error => console.error("Failed to add item", error))
   }
 
   const removeItem = (item: ShoppingItem) => {
-    fetch(itemsURL, {
+    fetch(`${itemsURL}/${item.id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(item),
     })
       .then(() => {
         loadItems()
