@@ -47,7 +47,7 @@ function App() {
       .catch(error => console.error("Failed to remove item", error))
   }
 
-  const list = listItems.map(item => <ListItem item={item} deleteItem={() => removeItem(item)}/>)
+  const list = listItems.map(item => <ListItem key={item.id} item={item} deleteItem={() => removeItem(item)}/>)
 
   return (
     <>
