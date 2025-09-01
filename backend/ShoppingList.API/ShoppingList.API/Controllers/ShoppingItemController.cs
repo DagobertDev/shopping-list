@@ -41,6 +41,7 @@ namespace ShoppingList.API.Controllers
         [HttpPost(Name = "AddItem")]
         public void Add([FromBody] ShoppingItem item)
         {
+            item.Id = Guid.NewGuid();
             Items.Add(item);
         }
 
