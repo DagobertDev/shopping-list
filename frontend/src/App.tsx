@@ -29,13 +29,22 @@ function App() {
     })
       .then(() => {
         loadItems()
-        setNewItem("")
       })
-      .catch(error => console.error("Failed to add item", error))
+      .catch(error => console.error("Failed to remove item", error))
   }
 
-  const removeItem = (removedItem: ShoppingItem) => {
-    setListItems((items => items.filter(item => item !== removedItem)));
+  const removeItem = (item: ShoppingItem) => {
+    fetch(itemsURL, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(item),
+    })
+      .then(() => {
+        loadItems()
+      })
+      .catch(error => console.error("Failed to remove item", error))
   }
 
   const list = listItems.map(item => <ListItem item={item} deleteItem={() => removeItem(item)}/>)

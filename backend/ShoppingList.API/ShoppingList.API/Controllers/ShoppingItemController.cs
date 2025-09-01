@@ -36,9 +36,15 @@ namespace ShoppingList.API.Controllers
         }
 
         [HttpPost(Name = "AddItem")]
-        public void Add([FromBody] ShoppingItem name)
+        public void Add([FromBody] ShoppingItem item)
         {
-            Items.Add(name);
+            Items.Add(item);
+        }
+
+        [HttpDelete(Name = "RemoveItem")]
+        public void Remove([FromBody] ShoppingItem removedItem)
+        {
+            Items.RemoveAll(item => item.Name == removedItem.Name);
         }
     }
 }
