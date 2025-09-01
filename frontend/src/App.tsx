@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import ListItem from './ListItem'
+import type { ShoppingItem } from './ShoppingItem'
 
 function App() {
 
   const itemsURL = "http://localhost:5157/shoppingitem"
 
-  const [listItems, setListItems] = useState<string[]>([])  
+  const [listItems, setListItems] = useState<ShoppingItem[]>([])  
   const [newItem, setNewItem] = useState("")
 
   const loadItems = () => {
     fetch(itemsURL)
       .then(result => result.json())
-      .then(items => setListItems(items.map(item => item.name)))
+      .then(items => setListItems(items))
       .catch(error => console.error("Failed to fetch items", error))
   }
 
@@ -33,11 +34,11 @@ function App() {
       .catch(error => console.error("Failed to add item", error))
   }
 
-  const removeItem = (removedItem: string) => {
+  const removeItem = (removedItem: ShoppingItem) => {
     setListItems((items => items.filter(item => item !== removedItem)));
   }
 
-  const list = listItems.map(item => <ListItem name={item} deleteItem={() => removeItem(item)}/>)
+  const list = listItems.map(item => <ListItem item={item} deleteItem={() => removeItem(item)}/>)
 
   return (
     <>

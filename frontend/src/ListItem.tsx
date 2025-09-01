@@ -1,7 +1,14 @@
-function ListItem({name, deleteItem}){
+import type { ShoppingItem } from "./ShoppingItem";
+
+interface ListItemProps {
+    item: ShoppingItem;
+    deleteItem: () => void;
+}
+
+function ListItem({item, deleteItem}: ListItemProps) {
     return (
         <li>
-            {name}
+            {item.name}
             <button onClick={deleteItem}>Remove</button>
         </li>
     )
