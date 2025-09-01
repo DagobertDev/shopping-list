@@ -10,14 +10,17 @@ namespace ShoppingList.API.Controllers
         [
             new ShoppingItem
             {
+                Id = Guid.NewGuid(),
                 Name = "Milk"
             },
             new ShoppingItem
-            {
+            {    
+                Id = Guid.NewGuid(),
                 Name = "Oats"
             },
             new ShoppingItem
             {
+                Id = Guid.NewGuid(),
                 Name = "Onions"
             },
         ];
