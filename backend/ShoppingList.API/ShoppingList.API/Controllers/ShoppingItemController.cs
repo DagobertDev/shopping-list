@@ -6,9 +6,20 @@ namespace ShoppingList.API.Controllers
     [Route("[controller]")]
     public class ShoppingItemController : ControllerBase
     {
-        private static readonly List<string> Items = 
+        private static readonly List<ShoppingItem> Items = 
         [
-            "Milk", "Oats", "Onions"
+            new ShoppingItem
+            {
+                Name = "Milk"
+            },
+            new ShoppingItem
+            {
+                Name = "Oats"
+            },
+            new ShoppingItem
+            {
+                Name = "Onions"
+            },
         ];
 
         private readonly ILogger<ShoppingItemController> _logger;
@@ -21,15 +32,11 @@ namespace ShoppingList.API.Controllers
         [HttpGet(Name = "GetItems")]
         public IEnumerable<ShoppingItem> Get()
         {
-            return Items.Select(item => new ShoppingItem 
-            { 
-                Name = item
-            })
-            .ToArray();
+            return Items;
         }
 
         [HttpPost(Name = "AddItem")]
-        public void Add([FromBody] string name)
+        public void Add([FromBody] ShoppingItem name)
         {
             Items.Add(name);
         }
