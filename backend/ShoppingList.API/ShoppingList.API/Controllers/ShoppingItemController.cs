@@ -20,6 +20,19 @@ namespace ShoppingList.API.Controllers
         {
             return _context.ShoppingItems.ToList();
         }
+        
+        [HttpGet("{id:guid}", Name = "GetItem")]
+        public async Task<ActionResult<ShoppingItem>> GetById(Guid id)
+        {
+            var item = await _context.ShoppingItems.FindAsync(id);
+        
+            if (item == null)
+            {
+                return NotFound();
+            }
+        
+            return item;
+        }
 
         [HttpPost(Name = "AddItem")]
         public void Add([FromBody] ShoppingItem item)
