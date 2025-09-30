@@ -1,0 +1,23 @@
+﻿services:
+  shoppinglist-api:
+    build:
+      context: .
+      dockerfile: ShoppingList.API/Dockerfile
+    ports:
+      - "5157:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__DefaultConnection=Server=db;Database=MyDb;User Id=sa;Password=${SQL_SA_PASSWORD};
+    container_name: shoppinglist-api
+    depends_on:
+      - db
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "${SQL_SA_PASSWORD}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    restart: always
