@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShoppingList.API.Controllers
 {
@@ -16,44 +17,48 @@ namespace ShoppingList.API.Controllers
         }
 
         [HttpGet(Name = "GetItems")]
-        public IEnumerable<ShoppingItem> Get()
+        public async Task<ActionResult<IEnumerable<ShoppingItem>>> Get()
         {
-            return _context.ShoppingItems.ToList();
+            return await _context.ShoppingItems.ToListAsync();
         }
-        
+
         [HttpGet("{id:guid}", Name = "GetItem")]
         public async Task<ActionResult<ShoppingItem>> GetById(Guid id)
         {
             var item = await _context.ShoppingItems.FindAsync(id);
-        
+
             if (item == null)
             {
                 return NotFound();
             }
-        
+
             return item;
         }
 
         [HttpPost(Name = "AddItem")]
-        public void Add([FromBody] ShoppingItem item)
+        public async Task<IActionResult> Add([FromBody] ShoppingItem item)
         {
             item.Id = Guid.NewGuid();
             _context.ShoppingItems.Add(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
         }
 
         [HttpDelete("{id:guid}", Name = "RemoveItem")]
-        public void Remove(Guid id)
+        public async Task<IActionResult> Remove(Guid id)
         {
-            var itemToDelete = _context.ShoppingItems.SingleOrDefault(item => item.Id == id);
+            var itemToDelete = await _context.ShoppingItems.SingleOrDefaultAsync(item => item.Id == id);
 
             if (itemToDelete == null)
             {
-                return;
+                return NotFound();
             }
-           
+
             _context.ShoppingItems.Remove(itemToDelete);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
