@@ -6,49 +6,41 @@ namespace ShoppingList.API.Controllers
     [Route("[controller]")]
     public class ShoppingItemController : ControllerBase
     {
-        private static readonly List<ShoppingItem> Items = 
-        [
-            new ShoppingItem
-            {
-                Id = Guid.NewGuid(),
-                Name = "Milk"
-            },
-            new ShoppingItem
-            {    
-                Id = Guid.NewGuid(),
-                Name = "Oats"
-            },
-            new ShoppingItem
-            {
-                Id = Guid.NewGuid(),
-                Name = "Onions"
-            },
-        ];
-
+        private readonly ShoppingListContext _context;
         private readonly ILogger<ShoppingItemController> _logger;
 
-        public ShoppingItemController(ILogger<ShoppingItemController> logger)
+        public ShoppingItemController(ShoppingListContext context, ILogger<ShoppingItemController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
         [HttpGet(Name = "GetItems")]
         public IEnumerable<ShoppingItem> Get()
         {
-            return Items;
+            return _context.ShoppingItems.ToList();
         }
 
         [HttpPost(Name = "AddItem")]
         public void Add([FromBody] ShoppingItem item)
         {
             item.Id = Guid.NewGuid();
-            Items.Add(item);
+            _context.ShoppingItems.Add(item);
+            _context.SaveChanges();
         }
 
         [HttpDelete("{id:guid}", Name = "RemoveItem")]
         public void Remove(Guid id)
         {
-            Items.RemoveAll(item => item.Id == id);
+            var itemToDelete = _context.ShoppingItems.SingleOrDefault(item => item.Id == id);
+
+            if (itemToDelete == null)
+            {
+                return;
+            }
+           
+            _context.ShoppingItems.Remove(itemToDelete);
+            _context.SaveChanges();
         }
     }
 }
