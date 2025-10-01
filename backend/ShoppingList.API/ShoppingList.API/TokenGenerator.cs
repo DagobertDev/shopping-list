@@ -6,13 +6,13 @@ namespace ShoppingList.API;
 
 public class TokenGenerator
 {
+    public static readonly byte[] Key = "*^MKF1UHhd9wII@iGI*QE%&2BegrtYPr"u8.ToArray();
+    
     public string GenerateToken(string email)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         
         // TODO: Replace this and store it in a secure location
-        var key = "*^MKF1UHhd9wII@iGI*QE%&2BegrtYPr"u8.ToArray();
-
         var claims = new Claim[]
         {
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -26,7 +26,7 @@ public class TokenGenerator
             Expires = DateTime.UtcNow.AddMinutes(1),
             Issuer = "ShoppingListAPI",
             Audience = "ShoppingListAPIClient",
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Key), SecurityAlgorithms.HmacSha256Signature)
         };
         
         var token = tokenHandler.CreateToken(tokenDescriptors);

@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ShoppingList.API;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,19 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddSingleton<TokenGenerator>();
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(TokenGenerator.Key),
+            ValidIssuer = "ShoppingListAPI",
+            ValidAudience = "ShoppingListAPIClient",
+            ValidateIssuerSigningKey = true,
+        };
+    });
 
 var app = builder.Build();
 
@@ -38,6 +53,7 @@ if (app.Environment.IsDevelopment())
                       .AllowAnyOrigin());
 }
 
+app.UseAuthorization();
 app.UseAuthorization();
 
 app.MapControllers();

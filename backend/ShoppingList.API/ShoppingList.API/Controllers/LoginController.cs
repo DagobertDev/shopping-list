@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ShoppingList.API.Controllers
@@ -24,6 +25,13 @@ namespace ShoppingList.API.Controllers
             
             var token = _tokenGenerator.GenerateToken(request.Email);
             return token;
+        }
+
+        [Authorize]
+        [HttpPost("/Verify", Name = "VerifyAuthorization")]
+        public IActionResult VerifyAuthorization()
+        {
+            return Ok();
         }
     }
 }
