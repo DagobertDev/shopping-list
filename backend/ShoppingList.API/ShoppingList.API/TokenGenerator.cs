@@ -6,13 +6,17 @@ namespace ShoppingList.API;
 
 public class TokenGenerator
 {
-    public static readonly byte[] Key = "*^MKF1UHhd9wII@iGI*QE%&2BegrtYPr"u8.ToArray();
-    
+    private readonly IConfiguration _configuration;
+
+    public TokenGenerator(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public string GenerateToken(string email)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        
-        // TODO: Replace this and store it in a secure location
+
         var claims = new Claim[]
         {
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -20,15 +24,20 @@ public class TokenGenerator
             new (JwtRegisteredClaimNames.Email, email)
         };
         
+        var key = _configuration["JwtSettings:SecretKey"] 
+                  ?? throw new ArgumentNullException("JwtSettings:SecretKey");
+
         var tokenDescriptors = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddMinutes(1),
-            Issuer = "ShoppingListAPI",
-            Audience = "ShoppingListAPIClient",
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Key), SecurityAlgorithms.HmacSha256Signature)
+            Issuer = _configuration["JwtSettings:Issuer"],
+            Audience = _configuration["JwtSettings:Audience"],
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key)),
+                SecurityAlgorithms.HmacSha256Signature)
         };
-        
+
         var token = tokenHandler.CreateToken(tokenDescriptors);
 
         return tokenHandler.WriteToken(token);

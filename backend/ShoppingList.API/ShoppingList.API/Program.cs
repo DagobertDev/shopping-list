@@ -21,11 +21,14 @@ builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        var key = builder.Configuration["JwtSettings:SecretKey"] 
+                  ?? throw new ArgumentNullException("JwtSettings:SecretKey");
+        
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            IssuerSigningKey = new SymmetricSecurityKey(TokenGenerator.Key),
-            ValidIssuer = "ShoppingListAPI",
-            ValidAudience = "ShoppingListAPIClient",
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key)),
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
             ValidateIssuerSigningKey = true,
         };
     });
