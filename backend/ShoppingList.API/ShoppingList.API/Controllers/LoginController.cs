@@ -16,7 +16,7 @@ namespace ShoppingList.API.Controllers
         }
 
         [HttpPost(Name = "Login")]
-        public ActionResult<string> Login(LoginRequest request)
+        public IActionResult Login(LoginRequest request)
         {
             if (request.Password != "password")
             {
@@ -24,7 +24,11 @@ namespace ShoppingList.API.Controllers
             }
             
             var token = _tokenGenerator.GenerateToken(request.Email);
-            return token;
+            
+            return Ok(new
+            {
+                access_token = token
+            });
         }
 
         [Authorize]
